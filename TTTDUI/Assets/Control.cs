@@ -1,8 +1,10 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
+using UnityEngine.EventSystems;
+
 
 public class Control : MonoBehaviour
 {
@@ -16,7 +18,7 @@ public class Control : MonoBehaviour
 
     public int tier=1;
 
-    public int kills=0;
+    public int kills=-1;
 
     public int armor=12;
 
@@ -76,6 +78,16 @@ public class Control : MonoBehaviour
 
     public Text armorText;
 
+    public Text speedText;
+
+    public Text roundText;
+
+    public Text attackCountText;
+
+    public Text killsText;
+
+    
+
 
     // Start is called before the first frame update
     
@@ -85,6 +97,11 @@ public class Control : MonoBehaviour
     {
         hitpointsNumberText.text=health.ToString();
         manaNumberText.text=mana.ToString();
+        roundText.text = "R"+round.ToString();
+        speedText.text = ":"+speed.ToString();
+        attackCountText.text = ":"+attackCount.ToString();
+        killsText.text = ":"+kills.ToString();
+        tierText.text = "T"+tier.ToString();
     }
 
 //Hero Change
@@ -94,7 +111,8 @@ public class Control : MonoBehaviour
         heroName=dropdownLabelText.text;
         health=HERO_MAX_HITPOINTS;
         tier=1;
-        kills=0;
+        kills=-1;
+        attackCount=0;
         if(heroName=="Relis"){
             
             mana=RELIS_MAX_MANA;
@@ -123,20 +141,29 @@ public class Control : MonoBehaviour
         }
         hitpointsNumberText.text=health.ToString();
         manaNumberText.text=mana.ToString();
-        tierText.text=tier.ToString();
-        armorText.text=armor.ToString();
+        tierText.text="T"+tier.ToString();
+        armorText.text=":"+armor.ToString();
+        speedText.text= ":"+speed.ToString();
+        killsText.text= ":"+kills.ToString();
+        attackCountText.text = ":"+attackCount.ToString();
     }
-    #endregion
+#endregion
 //Relis Abilities
-#region 
+#region  
 
 public void lungeslash(){
     AttackCounter();
     RoundCounter();
 }
+
+public void chainSlash(){
+    AttackCounter();
+    RoundCounter();
+}
+
 public void twirl(){
     if(mana>=TWIRL_COST){
-        mana-=2;
+        mana-=TWIRL_COST;
         manaNumberText.text=mana.ToString();
         AttackCounter();
         RoundCounter();
@@ -148,7 +175,7 @@ public void twirl(){
 public void staticTwirl(){
  
      if(mana>=TWIRL_COST){
-        mana-=2;
+        mana-=TWIRL_COST;
         manaNumberText.text=mana.ToString();
         AttackCounter();
         RoundCounter();
@@ -158,7 +185,7 @@ public void staticTwirl(){
 
 public void shockwave(){
      if(mana>=SHOCKWAVE_COST){
-        mana-=3;
+        mana-=SHOCKWAVE_COST;
         manaNumberText.text=mana.ToString();
         AttackCounter();
         RoundCounter();
@@ -167,7 +194,7 @@ public void shockwave(){
 
 public void stormwave(){
     if(mana>=SHOCKWAVE_COST){
-        mana-=3;
+        mana-=SHOCKWAVE_COST;
         manaNumberText.text=mana.ToString();
         AttackCounter();
         RoundCounter();
@@ -176,13 +203,180 @@ public void stormwave(){
 
 public void diStrike(){
     if(mana>=DISTRIKE_COST){
-        mana-=4; 
+        mana-=DISTRIKE_COST; 
         manaNumberText.text=mana.ToString();
         AttackCounter();
         RoundCounter();
     }
 }
 #endregion
+
+//Imvus Abilities
+#region 
+
+public void cardThrow(){
+    AttackCounter();
+    RoundCounter();
+}
+
+public void multiCardThrow(){
+    AttackCounter();
+    RoundCounter();
+}
+
+public void cardsOfBuff(){
+    if(mana>=CARDS_OF_BUFF_COST){
+        mana-=CARDS_OF_BUFF_COST;
+        manaNumberText.text=mana.ToString();
+        AttackCounter();
+        RoundCounter();
+    }
+}
+
+public void cardsOfExplosion(){
+    if(mana>=CARDS_OF_EXPLOSION_COST){
+        mana-=CARDS_OF_EXPLOSION_COST;
+        manaNumberText.text=mana.ToString();
+        AttackCounter();
+        RoundCounter();
+    }
+}
+
+public void cardsOfRejuvenation(){
+    if(mana>=CARDS_OF_REJUVENATION_COST){
+        mana-=CARDS_OF_REJUVENATION_COST;
+        manaNumberText.text = mana.ToString();
+        AttackCounter();
+        RoundCounter();
+    }
+}
+
+#endregion
+//Tharkos Abilities
+#region 
+
+public void shieldBash(){
+    AttackCounter();
+    RoundCounter();
+}
+
+public void shieldSmash(){
+    AttackCounter();
+    RoundCounter();
+}
+
+public void divineBlessing(){
+    if (mana>=DIVINE_BLESSING_COST){
+        mana-=DIVINE_BLESSING_COST;
+        manaNumberText.text = mana.ToString();
+        AttackCounter();
+        RoundCounter();
+    }
+}
+
+public void testOfFaith(){
+    if (mana>=TEST_OF_FAITH_COST){
+        mana-=TEST_OF_FAITH_COST;
+        manaNumberText.text = mana.ToString();
+        AttackCounter();
+        RoundCounter();
+    }
+}
+
+public void shieldOfLight(){
+    if (mana>=SHIELD_OF_LIGHT_COST){
+        mana-=SHIELD_OF_LIGHT_COST;
+        manaNumberText.text = mana.ToString();
+        AttackCounter();
+        RoundCounter();
+    }
+}
+#endregion
+
+//Slvia Abilities
+#region
+
+public void singleShot(){
+    AttackCounter();
+    RoundCounter();
+}
+
+public void multiShot(){
+    AttackCounter();
+    RoundCounter();
+}
+
+public void piercingArrow(){
+    if (mana>=PIERCING_ARROW_COST){
+        mana-=PIERCING_ARROW_COST;
+        manaNumberText.text = mana.ToString();
+        AttackCounter();
+        RoundCounter();
+    }
+}
+
+public void arrowBarrage(){
+    if (mana>=ARROW_BARRAGE_COST){
+        mana-=ARROW_BARRAGE_COST;
+        manaNumberText.text = mana.ToString();
+        AttackCounter();
+        RoundCounter();
+    }
+}
+
+public void phantomSteps(){
+    if (mana>=PHANTOM_STEPS_COST){
+        mana-=PHANTOM_STEPS_COST;
+        manaNumberText.text = mana.ToString();
+        AttackCounter();
+        RoundCounter();
+    }
+}
+#endregion
+
+//Wevil Abilities
+#region
+
+public void backstab(){
+    AttackCounter();
+    RoundCounter();
+}
+
+public void backSlash(){
+    AttackCounter();
+    RoundCounter();
+}
+
+public void swap(){
+    if (mana>=SWAP_COST){
+        mana-=SWAP_COST;
+        manaNumberText.text = mana.ToString();
+        AttackCounter();
+        RoundCounter();
+    }
+}
+
+public void delay(){
+    if (mana>=DELAY_COST){
+        mana-=DELAY_COST;
+        manaNumberText.text = mana.ToString();
+        AttackCounter();
+        RoundCounter();
+    }
+}
+
+public void deadlyKnives(){
+    if (mana>=DEADLY_KNIVES_COST){
+        mana-=DEADLY_KNIVES_COST;
+        manaNumberText.text = mana.ToString();
+        AttackCounter();
+        RoundCounter();
+    }
+}
+#endregion
+
+
+
 //Hipoint Manipulation
 #region
 public void addHitpoints(){
@@ -239,40 +433,44 @@ public void minusMana(){
 }
 #endregion
 
-
 public void AttackCounter()
 {
-    if(attackCount<2)
+    if(attackCount<2){
         attackCount+=1;
-
-
+        attackCountText.text = attackCount.ToString();
+    }
 }
+
 
 public void RoundCounter()
 {
     if (attackCount==2){
         round+=1;
         attackCount=0;
+        attackCountText.text = ":"+attackCount.ToString();
+        roundText.text = "R"+round.ToString();
     }
 }
   
-public void killCounter(){
-    kills+=1;
-}
 
 public void tierUpgrade(){
     if(kills==3){
         tier=2;
+        tierText.text = "T"+tier.ToString();
     }
     if(kills==6){
         tier=3;
+        tierText.text = "T"+tier.ToString();
     }
     if(kills==11){
         tier=4;
+        tierText.text = "T"+tier.ToString();
     }
     if(kills==16){
         tier=5;
+        tierText.text = "T"+tier.ToString();
     }
+}  
 }
    
-}
+
